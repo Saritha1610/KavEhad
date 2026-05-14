@@ -19,6 +19,10 @@
             --text-color: #333;
         }
 
+        html, body {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Heebo', sans-serif;
             margin: 0;
@@ -27,7 +31,6 @@
             background-color: white;
             line-height: 1.6;
             scroll-behavior: smooth;
-            overflow-x: hidden;
         }
 
         a {
@@ -73,7 +76,7 @@
         }
 
         .logo img {
-            height: 50px;
+            height: 80px;
             width: auto;
             display: block;
         }
@@ -583,12 +586,92 @@
             color: black;
         }
 
+        /* --- Scroll Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.from-left {
+            transform: translateX(-50px);
+        }
+
+        .reveal.from-right {
+            transform: translateX(50px);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translate(0);
+        }
+
+        /* --- Hamburger --- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
         /* מובייל */
         @media (max-width: 768px) {
             header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            nav {
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            nav.open {
+                max-height: 300px;
+            }
+
+            nav ul {
                 flex-direction: column;
-                gap: 20px;
-                padding: 20px;
+                gap: 0;
+                padding: 10px 0;
+            }
+
+            nav ul li a {
+                display: block;
+                padding: 12px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .header-cta {
+                display: none;
+            }
+
+            .modal-nav {
+                display: none;
+            }
+
+            .hero {
+                background-attachment: scroll;
             }
 
             .hero h1 {
@@ -618,6 +701,7 @@
             .about-image {
                 width: 100%;
                 height: 300px;
+                box-shadow: none;
             }
 
             .footer-container {
@@ -635,12 +719,17 @@
                 <img src="images/logo.png" alt="לוגו האתר">
             </a>
         </div>
-        <nav>
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="main-nav">
             <ul>
-                <li><a href="#">ראשי</a></li>
-                <li><a href="#about">אודות</a></li>
-                <li><a href="#services">שירותים</a></li>
-                <li><a href="#projects">פרויקטים</a></li>
+                <li><a href="#" onclick="closeMenu()">ראשי</a></li>
+                <li><a href="#about" onclick="closeMenu()">אודות</a></li>
+                <li><a href="#services" onclick="closeMenu()">שירותים</a></li>
+                <li><a href="#projects" onclick="closeMenu()">פרויקטים</a></li>
             </ul>
         </nav>
         <a href="#contact" class="header-cta">צור קשר</a>
@@ -653,8 +742,8 @@
     </section>
 
     <section id="about" class="about">
-        <div class="about-image"></div>
-        <div class="about-content">
+        <div class="about-image reveal from-left"></div>
+        <div class="about-content reveal from-right">
             <h2>יותר מקבלן – השותף שלך להצלחה</h2>
             <p><strong>חברת קו אחד</strong> נולדה מתוך הבנה שבנייה היא לא רק בטון וברזל, אלא תהליך שדורש ראייה רחבה,
                 דיוק הנדסי והבנה כלכלית מעמיקה.</p>
@@ -665,13 +754,13 @@
     </section>
 
     <section id="services" class="services">
-        <h2 class="section-title">הדרך שלכם לנכס מושלם</h2>
-        <p class="section-subtitle">בין אם אתם בונים בית פרטי, מחפשים פתרון יזמי למגרש או צריכים מנהל פרויקט – יש לנו את
+        <h2 class="section-title reveal">הדרך שלכם לנכס מושלם</h2>
+        <p class="section-subtitle reveal" style="transition-delay: 0.15s;">בין אם אתם בונים בית פרטי, מחפשים פתרון יזמי למגרש או צריכים מנהל פרויקט – יש לנו את
             המסלול עבורכם.</p>
 
         <div class="services-grid">
 
-            <div class="service-card">
+            <div class="service-card reveal" style="transition-delay: 0s;">
                 <div class="icon-box"><i class="fa-solid fa-house-chimney"></i></div>
                 <div>
                     <h3>בנייה עד מפתח</h3>
@@ -681,7 +770,7 @@
                 <a href="#contact" class="service-link">לבניית הבית שלי <i class="fa-solid fa-arrow-left"></i></a>
             </div>
 
-            <div class="service-card">
+            <div class="service-card reveal" style="transition-delay: 0.15s;">
                 <div class="icon-box"><i class="fa-solid fa-handshake"></i></div>
                 <div>
                     <h3>שותפות יזמית ומימוש קרקע</h3>
@@ -691,7 +780,7 @@
                 <a href="#contact" class="service-link">לבדיקת היתכנות <i class="fa-solid fa-arrow-left"></i></a>
             </div>
 
-            <div class="service-card">
+            <div class="service-card reveal" style="transition-delay: 0.3s;">
                 <div class="icon-box"><i class="fa-solid fa-clipboard-check"></i></div>
                 <div>
                     <h3>ניהול פרויקט ופיקוח</h3>
@@ -708,35 +797,35 @@
         <h2 class="section-title" style="text-align: center; display:block;">פרויקטים נבחרים</h2>
         <div class="projects-grid">
 
-            <div class="project-card" onclick="openGallery('nahalat')"
-                style="background-image: url('images/nahalat/1.jpeg');">
+            <div class="project-card reveal" onclick="openGallery('nahalat')"
+                style="background-image: url('images/nahalat/1.jpeg'); transition-delay: 0s;">
                 <div class="project-info">
-                    <h3>פרויקט נחלת</h3>
-                    <p>בנייה רוויה למגורים | לחצו לגלריה</p>
+                    <h3>פרויקט נחלת יהודה | ראשון לציון</h3>
+                    <p>שיפוץ מאסיבי לבית קיים. ליווי מהתכנון ועד למסירת המפתח | לחצו לגלריה</p>
                 </div>
             </div>
 
-            <div class="project-card" onclick="openGallery('irus')"
-                style="background-image: url('images/irus/1.jpeg');">
+            <div class="project-card reveal" onclick="openGallery('irus')"
+                style="background-image: url('images/irus/1.jpeg'); transition-delay: 0.15s;">
                 <div class="project-info">
-                    <h3>מתחם האירוס</h3>
-                    <p>וילה יוקרתית | לחצו לגלריה</p>
+                    <h3>יישוב האירוס</h3>
+                    <p>ניהול, תכנון וביצוע של וילה יוקרתית – משלב היסודות והקונסטרוקציה ועד לגמר המוקפד | לחצו לגלריה</p>
                 </div>
             </div>
 
-            <div class="project-card" onclick="openGallery('sokinik')"
-                style="background-image: url('images/sokinik/1.jpeg');">
+            <div class="project-card reveal" onclick="openGallery('sokinik')"
+                style="background-image: url('images/sokinik/1.jpeg'); transition-delay: 0.3s;">
                 <div class="project-info">
-                    <h3>בית סוקניק</h3>
-                    <p>ניהול וביצוע עד מפתח | לחצו לגלריה</p>
+                    <h3>סוקניק יהוד</h3>
+                    <p>ניהול, תכנון וביצוע מקצה לקצה – משלב המגרש ועד למסירת מפתח | לחצו לגלריה</p>
                 </div>
             </div>
 
-            <div class="project-card" onclick="openGallery('alflert')"
-                style="background-image: url('images/alflert/1.jpeg');">
+            <div class="project-card reveal" onclick="openGallery('alflert')"
+                style="background-image: url('images/alflert/1.jpeg'); transition-delay: 0.45s;">
                 <div class="project-info">
-                    <h3>פרויקט אלפלרט</h3>
-                    <p>פרויקט נוסף | לחצו לגלריה</p>
+                    <h3>אלפרט</h3>
+                    <p>ניהול, תכנון וביצוע מקצה לקצה – משלב המגרש ועד למסירת מפתח | לחצו לגלריה</p>
                 </div>
             </div>
 
@@ -745,7 +834,7 @@
 
     <footer id="contact">
         <div class="footer-container">
-            <div class="footer-info">
+            <div class="footer-info reveal from-right">
                 <h2>השאלה היא לא אם לבנות,<br>אלא עם מי לבנות.</h2>
                 <p>האם אתם מנצלים את הפוטנציאל המלא של המגרש שלכם? אל תתנו לחלום להישאר על הנייר. בואו ניפגש לקפה
                     (עלינו) ונראה איך הופכים את הקרקע שלכם לנכס מניב.</p>
@@ -764,16 +853,14 @@
                 <div class="social-icons">
                     <a href="https://www.instagram.com/kav1.dev/" target="_blank" title="Instagram"><i
                             class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.facebook.com" target="_blank" title="Facebook"><i
-                            class="fa-brands fa-facebook-f"></i></a>
                     <a href="https://wa.me/972506501051?text=%D7%A9%D7%9C%D7%95%D7%9D%20%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D" target="_blank" title="WhatsApp"><i
                             class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
 
-            <div class="footer-form">
-                <h3>השאירו פרטים</h3>
-                <span class="form-cta">ונחזור אליכם לשיחת ייעוץ ללא התחייבות</span>
+            <div class="footer-form reveal from-left">
+                <h3>באיזה שלב אתם בדרך לבית החדש?</h3>
+                <span class="form-cta">השאירו פרטים וספרו לנו איפה אתם עומדים</span>
                 <form id="contact-form">
                     <div class="form-group">
                         <input type="text" id="form-name" placeholder="שם מלא" required>
@@ -782,7 +869,7 @@
                         <input type="tel" id="form-phone" placeholder="טלפון" required dir="rtl">
                     </div>
                     <div class="form-group">
-                        <textarea id="form-message" rows="4" placeholder="ספרו לנו קצת על הפרויקט (יש מגרש? מחפשים ניהול?)"></textarea>
+                        <textarea id="form-message" rows="4" placeholder="ספרו לנו קצת על הפרויקט (מיקום, שלב נוכחי, או כל אתגר שיש לכם)"></textarea>
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn">דברו איתי!</button>
                     <p id="form-success" style="display:none; color:green; text-align:center; margin-top:15px; font-weight:bold;">הפרטים נשלחו בהצלחה! נחזור אליכם בקרוב.</p>
@@ -792,13 +879,14 @@
         </div>
 
         <div class="copyright">
-            &copy; 2024 קו אחד - חברה לבנייה ויזמות. כל הזכויות שמורות.
+            &copy; 2026 קו אחד - חברה לבנייה ויזמות. כל הזכויות שמורות.
         </div>
     </footer>
 
     <div id="myModal" class="modal">
         <span class="close" onclick="closeGallery()">&times;</span>
         <img class="modal-content" id="img01">
+        <video class="modal-content" id="vid01" controls playsinline style="display:none;"></video>
         <div class="modal-nav">
             <span class="nav-btn" onclick="changeImage(-1)">&#10094; הקודם</span>
             <span class="nav-btn" onclick="changeImage(1)">הבא &#10095;</span>
@@ -857,7 +945,10 @@
             ],
             'alflert': [
                 'images/alflert/1.jpeg',
-                'images/alflert/2.jpeg'
+                'images/alflert/2.jpeg',
+                'images/alflert/3.jpeg',
+                'images/alflert/4.jpeg',
+                'images/alflert/5.mp4'
             ]
         };
 
@@ -865,6 +956,7 @@
         let currentIndex = 0;
         const modal = document.getElementById("myModal");
         const modalImg = document.getElementById("img01");
+        const modalVid = document.getElementById("vid01");
 
         function openGallery(projectName) {
             if (projects[projectName]) {
@@ -879,10 +971,25 @@
 
         function closeGallery() {
             modal.style.display = "none";
+            modalVid.pause();
+            modalVid.src = "";
         }
 
         function showImage() {
-            modalImg.src = currentProject[currentIndex];
+            const src = currentProject[currentIndex];
+            const isVideo = src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.mov');
+            if (isVideo) {
+                modalImg.style.display = "none";
+                modalVid.style.display = "block";
+                modalVid.src = src;
+                modalVid.play();
+            } else {
+                modalVid.style.display = "none";
+                modalVid.pause();
+                modalVid.src = "";
+                modalImg.style.display = "block";
+                modalImg.src = src;
+            }
         }
 
         function changeImage(direction) {
@@ -903,6 +1010,42 @@
                 closeGallery();
             }
         });
+
+        // scroll reveal
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            observer.observe(el);
+        });
+
+        // hamburger menu
+        function toggleMenu() {
+            document.getElementById('main-nav').classList.toggle('open');
+        }
+
+        function closeMenu() {
+            document.getElementById('main-nav').classList.remove('open');
+        }
+
+        // swipe support for mobile
+        let touchStartX = 0;
+        modal.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].clientX;
+        }, { passive: true });
+
+        modal.addEventListener('touchend', function (e) {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                changeImage(diff > 0 ? 1 : -1);
+            }
+        }, { passive: true });
     </script>
 
 </body>
