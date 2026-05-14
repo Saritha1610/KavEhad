@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git config *)",
+      "Bash(Select-String -Pattern \"user\\\\.|credential\\\\.\")"
+    ]
+  }
+}

@@ -14,8 +14,7 @@
         /* --- עיצוב כללי --- */
         :root {
             --primary-color: #1a1a1a;
-            --accent-color: #c5a059;
-            /* צבע זהב */
+            --accent-color: rgb(97, 155, 186);
             --bg-light: #f8f9fa;
             --text-color: #333;
         }
@@ -175,7 +174,7 @@
 
         /* --- Services --- */
         .services {
-            padding: 100px 50px;
+            padding: 34px 50px 100px 50px;
             background-color: white;
             text-align: center;
         }
@@ -211,13 +210,14 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .service-card {
             background: var(--bg-light);
             padding: 40px 30px;
-            width: 350px;
+            flex: 1;
+            min-width: 0;
             border-top: 4px solid var(--primary-color);
             text-align: right;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -296,8 +296,7 @@
         .about-image {
             width: 500px;
             height: 400px;
-            /* תמונה זמנית לאודות - ניתן להחליף */
-            background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800');
+            background-image: url('images/about-illustration.svg');
             background-size: cover;
             background-position: center;
             border-radius: 10px;
@@ -493,6 +492,14 @@
             background: white;
         }
 
+        .form-group input[type="tel"] {
+            text-align: right;
+        }
+
+        .form-group input[type="tel"]::placeholder {
+            text-align: right;
+        }
+
         .submit-btn {
             width: 100%;
             background-color: var(--primary-color);
@@ -595,8 +602,13 @@
                 padding: 60px 20px;
             }
 
+            .services-grid {
+                flex-wrap: wrap;
+            }
+
             .service-card {
                 width: 100%;
+                flex: none;
             }
 
             .about {
@@ -754,7 +766,7 @@
                             class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.facebook.com" target="_blank" title="Facebook"><i
                             class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://wa.me/972506501051" target="_blank" title="WhatsApp"><i
+                    <a href="https://wa.me/972506501051?text=%D7%A9%D7%9C%D7%95%D7%9D%20%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D" target="_blank" title="WhatsApp"><i
                             class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
@@ -762,17 +774,19 @@
             <div class="footer-form">
                 <h3>השאירו פרטים</h3>
                 <span class="form-cta">ונחזור אליכם לשיחת ייעוץ ללא התחייבות</span>
-                <form action="#" method="POST">
+                <form id="contact-form">
                     <div class="form-group">
-                        <input type="text" placeholder="שם מלא" required>
+                        <input type="text" id="form-name" placeholder="שם מלא" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" placeholder="טלפון" required dir="rtl">
+                        <input type="tel" id="form-phone" placeholder="טלפון" required dir="rtl">
                     </div>
                     <div class="form-group">
-                        <textarea rows="4" placeholder="ספרו לנו קצת על הפרויקט (יש מגרש? מחפשים ניהול?)"></textarea>
+                        <textarea id="form-message" rows="4" placeholder="ספרו לנו קצת על הפרויקט (יש מגרש? מחפשים ניהול?)"></textarea>
                     </div>
-                    <button type="submit" class="submit-btn">דברו איתי!</button>
+                    <button type="submit" class="submit-btn" id="submit-btn">דברו איתי!</button>
+                    <p id="form-success" style="display:none; color:green; text-align:center; margin-top:15px; font-weight:bold;">הפרטים נשלחו בהצלחה! נחזור אליכם בקרוב.</p>
+                    <p id="form-error" style="display:none; color:red; text-align:center; margin-top:15px;">שגיאה בשליחה, נסו שוב.</p>
                 </form>
             </div>
         </div>
@@ -790,6 +804,37 @@
             <span class="nav-btn" onclick="changeImage(1)">הבא &#10095;</span>
         </div>
     </div>
+
+    <script>
+        // --- טופס יצירת קשר ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXF0IY8EZ_B5IQi4J1jIi79GmXwsAiKFoQRt3ujft9u6JBtS8DFREQvLBxMLa8tupCoQ/exec';
+
+        document.getElementById('contact-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'שולח...';
+
+            const params = new URLSearchParams({
+                name:    document.getElementById('form-name').value,
+                phone:   document.getElementById('form-phone').value,
+                message: document.getElementById('form-message').value
+            });
+
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params })
+                .then(function () {
+                    document.getElementById('form-success').style.display = 'block';
+                    document.getElementById('form-error').style.display = 'none';
+                    document.getElementById('contact-form').reset();
+                    btn.textContent = 'נשלח!';
+                })
+                .catch(function () {
+                    document.getElementById('form-error').style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'דברו איתי!';
+                });
+        });
+    </script>
 
     <script>
         // --- גלריה ---
